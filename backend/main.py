@@ -16,6 +16,8 @@ from langchain_core.runnables import RunnablePassthrough
 ## file management
 from .config import settings 
 from .ingest import ingest_all
+from .retrieve import get_retriever
+from .llm import get_chat_model
 
 
 
@@ -65,7 +67,46 @@ def ingest():
 
 
 
+### Generate Structured code documentation ## 
+@app.post("/generate_docs")
+def generate_docs():
+    retriever = get_retriever() #loads the FAISS index and returns a retriever object (top-k retrieval).
+    model = get_chat_model()#return your LLM wrapper (Ollama/OpenAI/whatever you use).
+    
+    prompt = ChatPromptTemplate.from_template(
+        """
+        You are an AI assistant that generates structured documentation for python code.
+        Use ONLY the retrieved context ( uploaded code ).
+        
+        Output format:
+        - **Module Summary**
+        - **Classes** (with methods & purpose)
+        - **Functions** (inputs, outputs, purpose)
+        - **Usage Example** (if available)
+
+    
+        Context:{context}            
+        
+        """
+    )
+    
+    # '''format_docs is a helper function to turn retrieved Document objects into a single text string for the LLM.'''
+    def format_docs(docs):
+        return "\n\n".join([f"[{d.metadata.get('source', '?')}] {d.page_content}" for d in docs])
 
 
 
+    # The input to the pipeline is a dict with a context key.
+    # retriever | format_docs means: run the retriever 
+    # Effectively: retriever -> format_docs -> prompt -> model.
+    chain = (
+        {"context" : retriever | format_docs}
+        | prompt
+        | model
+    )
+    
+    
+    answer = chain.invoke("")
+    content = getattr(answer, "content", str(answer))
+    return {"documentation":content}
 

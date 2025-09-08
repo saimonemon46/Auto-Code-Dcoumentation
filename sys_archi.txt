@@ -1,0 +1,10 @@
+[Codebase] → [Load & Split] → [Embeddings → FAISS DB]
+                                 |
+                                 ↓
+                     [Query / Retrieve Examples & Docs]
+                                 |
+                                 ↓
+                       [LLM Generates Documentation]
+                                 |
+                                 ↓
+                    [Markdown / HTML / PDF Output]

@@ -3,9 +3,9 @@ from pydantic import Field
 from pathlib import Path
 
 class Settings(BaseSettings):
-    # Ollama (LLM) settings
-    OLLAMA_MODEL: str = Field(default="llama3")  # Default Ollama model
-    OLLAMA_BASE_URL: str = Field(default="http://localhost:11434")
+    # Groq (LLM) settings
+    GROQ_MODEL: str = Field(default="llama3-70b-8192")
+    GROQ_API_KEY: str = Field(default="")  # Load from .env
 
     # Embedding model (HuggingFace)
     EMBEDDING_MODEL: str = Field(

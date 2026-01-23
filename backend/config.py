@@ -4,7 +4,7 @@ from pathlib import Path
 
 class Settings(BaseSettings):
     # Groq (LLM) settings
-    GROQ_MODEL: str = Field(default="llama3-70b-8192")
+    GROQ_MODEL: str = Field(default="openai/gpt-oss-120b")
     GROQ_API_KEY: str = Field(default="")  # Load from .env
 
     # Embedding model (HuggingFace)

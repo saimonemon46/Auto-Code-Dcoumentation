@@ -1,10 +1,8 @@
-from langchain_community.chat_models import ChatOllama
-
+from langchain_groq import ChatGroq
 from .config import settings
 
-
 def get_chat_model():
-    return ChatOllama(
-        model=settings.Groq_MODEL,
-        base_url = settings.OLLAMA_BASE_URL
+    return ChatGroq(
+        model=settings.GROQ_MODEL,
+        groq_api_key=settings.GROQ_API_KEY
     )
